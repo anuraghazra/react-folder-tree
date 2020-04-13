@@ -10,7 +10,6 @@ export default function App() {
       type: "folder",
       name: "client",
       files: [
-        { type: "file", name: "setup.js" },
         {
           type: "folder",
           name: "ui",
@@ -26,7 +25,8 @@ export default function App() {
             { type: "file", name: "Tree.js" },
             { type: "file", name: "Tree.style.js" }
           ]
-        }
+        },
+        { type: "file", name: "setup.js" }
       ]
     },
     {
