@@ -6,7 +6,14 @@ import { StyledFile, StyledFolder } from "./Tree.style";
 import { FolderName } from "./TreeFolder";
 import FILE_ICONS from "./FileIcons";
 
-const PlaceholderInput = ({ type, name, folderLevel, handleSubmit }) => {
+const PlaceholderInput = ({
+  type,
+  name,
+  folderLevel,
+  handleSubmit,
+  defaultValue,
+  style
+}) => {
   const [ext, setExt] = useState("");
   const inputRef = useRef();
 
@@ -30,17 +37,17 @@ const PlaceholderInput = ({ type, name, folderLevel, handleSubmit }) => {
   }, [inputRef, handleSubmit]);
 
   return type === "file" ? (
-    <StyledFile className="tree__file">
+    <StyledFile className="tree__file" style={style}>
       {FILE_ICONS[ext] ? FILE_ICONS[ext] : <AiOutlineFile />}
       &nbsp;&nbsp;
-      <input ref={inputRef} onChange={updateExt} />
+      <input defaultValue={defaultValue} ref={inputRef} onChange={updateExt} />
     </StyledFile>
   ) : (
-    <StyledFolder id={v4()} name={name} indent={folderLevel + 1}>
+    <StyledFolder id={v4()} name={name} indent={folderLevel + 1} style={style}>
       <FolderName
         isOpen={true}
         handleClick={() => {}}
-        name={<input ref={inputRef} />}
+        name={<input defaultValue={defaultValue} ref={inputRef} />}
       />
     </StyledFolder>
   );

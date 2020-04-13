@@ -10,17 +10,28 @@ const Tree = ({ children, data, onNodeClick }) => {
   const makeComponents = data => {
     return data.map(item => {
       item.id = v4();
+
+      // root files
       if (item.type === "file") {
-        return <File name={item.name} />;
+        return <File id={item.id} name={item.name} />;
       }
       return (
         <Folder id={item.id} name={item.name}>
           {item.files &&
             item.files.map((file, index) => {
+              file.id = v4();
+              file.parentId = item.id;
               if (file.type === "folder") {
                 return makeComponents([file]);
               }
-              return <File key={index} name={file.name} />;
+              return (
+                <File
+                  id={file.id}
+                  parentId={file.parentId}
+                  key={index}
+                  name={file.name}
+                />
+              );
             })}
         </Folder>
       );

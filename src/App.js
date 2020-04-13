@@ -15,6 +15,7 @@ export default function App() {
           type: "folder",
           name: "ui",
           files: [
+            { type: "file", name: "Toggle.js" },
             { type: "file", name: "Button.js" },
             { type: "file", name: "Button.style.js" }
           ]
@@ -46,15 +47,53 @@ export default function App() {
 
   const handleClick = props => {
     let newpath = _cloneDeep(structure);
-    let found = findNodeById(newpath, props.id);
 
-    if (props.type === "file") {
+    if (props.type === "file" && props.action === "delete") {
+      let found = findNodeById(newpath, props.parentId);
+      if (!found) {
+        console.log(newpath, props.id);
+        newpath = newpath.filter(file => file.id !== props.id);
+        setStructure(newpath);
+        return;
+      } else {
+        found.files = found.files.filter(file => file.id !== props.id);
+      }
+      setStructure(newpath);
+      return;
+    }
+    if (props.type === "file" && props.action === "edit") {
+      let found = findNodeById(newpath, props.id);
+      found.name = props.name;
+      console.log(newpath);
+      setStructure(newpath);
+      return;
+    }
+
+    if (props.type === "file" && props.action === "create") {
+      let found = findNodeById(newpath, props.id);
       found.files.push(createFile({ name: props.name }));
+      setStructure(newpath);
+      return;
     }
-    if (props.type === "folder") {
+
+    if (props.type === "folder" && props.action === "delete") {
+      let found = findNodeById(newpath, props.id);
+      let parent = findNodeById(newpath, found.parentId);
+      if (!parent) {
+        newpath = newpath.filter(item => item.id !== props.id);
+      } else {
+        parent.files = parent.files.filter(item => item.id !== props.id);
+      }
+      setStructure(newpath);
+      return;
+    }
+
+    if (props.type === "folder" && props.action === "create") {
+      let found = findNodeById(newpath, props.id);
       found.files.push(createFolder({ name: props.name }));
+      setStructure(newpath);
+      return;
     }
-    setStructure(newpath);
   };
 
   return (
@@ -71,8 +110,17 @@ export default function App() {
             <Tree.File name="Button.style.js" />
           </Tree.Folder>
           <Tree.File name="setup.js" />
+          <Tree.Folder name="client">
+            <Tree.Folder name="Components">
+              <Tree.File name="Button.jsx" />
+              <Tree.File name="Button.style.js" />
+            </Tree.Folder>
+            <Tree.File name="setup.js" />
+          </Tree.Folder>
         </Tree.Folder>
         <Tree.File name="index.html" />
+        <Tree.File name="style.css" />
+        <Tree.File name="style.css" />
         <Tree.File name="style.css" />
       </Tree>
     </div>

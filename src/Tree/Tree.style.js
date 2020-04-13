@@ -21,12 +21,14 @@ export const StyledFolder = styled.div`
   }
 `;
 
-export const Actions = styled.div`
+export const ActionsWrapper = styled.div`
+  width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  .folder__actions {
+  .actions {
     opacity: 0;
     pointer-events: none;
     transition: 0.2s;
@@ -43,14 +45,14 @@ export const Actions = styled.div`
     }
   }
 
-  &:hover .folder__actions {
+  &:hover .actions {
     opacity: 1;
     pointer-events: all;
     transition: 0.2s;
   }
 `;
 
-export const StyledFolderName = styled.div`
+export const StyledName = styled.div`
   background-color: white;
   display: flex;
   align-items: center;

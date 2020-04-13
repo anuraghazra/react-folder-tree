@@ -3,23 +3,24 @@ import {
   AiOutlineFolderAdd,
   AiOutlineFileAdd,
   AiOutlineFolder,
-  AiOutlineFolderOpen
+  AiOutlineFolderOpen,
+  AiOutlineDelete
 } from "react-icons/ai";
 import {
-  Actions,
+  ActionsWrapper,
   Collapse,
   StyledFolder,
-  StyledFolderName,
+  StyledName,
   VerticalLine
 } from "./Tree.style";
 import { useTreeContext } from "./TreeContext";
 import { PlaceholderInput } from "./TreePlaceholderInput";
 
 const FolderName = ({ isOpen, name, handleClick }) => (
-  <StyledFolderName onClick={handleClick}>
+  <StyledName onClick={handleClick}>
     {isOpen ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
     &nbsp;&nbsp;{name}
-  </StyledFolderName>
+  </StyledName>
 );
 
 const Folder = ({ name, children, level, parentPath, id }) => {
@@ -54,6 +55,7 @@ const Folder = ({ name, children, level, parentPath, id }) => {
             id,
             type: "file",
             name: fileName,
+            action: "create",
             path: `${parentPath}/${name}`
           });
         }}
@@ -73,6 +75,7 @@ const Folder = ({ name, children, level, parentPath, id }) => {
           onNodeClick({
             id,
             type: "folder",
+            action: "create",
             name: folderName,
             path: `${parentPath}/${name}`
           });
@@ -81,10 +84,14 @@ const Folder = ({ name, children, level, parentPath, id }) => {
     ]);
   };
 
+  const handleDeleteFolder = () => {
+    onNodeClick({ id, action: "delete", type: "folder" });
+  };
+
   return (
     <StyledFolder className="tree__folder" indent={level}>
       <VerticalLine>
-        <Actions>
+        <ActionsWrapper>
           <FolderName
             name={name}
             isOpen={isOpen}
@@ -92,12 +99,13 @@ const Folder = ({ name, children, level, parentPath, id }) => {
           />
 
           {isImparative && (
-            <div className="folder__actions">
+            <div className="actions">
               <AiOutlineFileAdd onClick={handleFileCreation} />
               <AiOutlineFolderAdd onClick={handleFolderCreation} />
+              <AiOutlineDelete onClick={handleDeleteFolder} />
             </div>
           )}
-        </Actions>
+        </ActionsWrapper>
         <Collapse className="tree__folder--collapsible" isOpen={isOpen}>
           {childs}
         </Collapse>
