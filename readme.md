@@ -1,12 +1,12 @@
 # React Folder Tree Component
 
-Simple yet flexible folder tree component with Imparative and Declarative API with build-in folder editing capabilities.
+Simple yet flexible folder tree component with Imperative and Declarative API with build-in folder editing capabilities.
 
 [Live Demo](https://schsn.csb.app/)
 
-## Imparative API
+## Imperative API
 
-Imparative API can be editable. :D
+Imperative API can be editable. :D
 
 ```jsx
 <Tree

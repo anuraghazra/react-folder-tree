@@ -1,6 +1,7 @@
 import React from "react";
 
 const defaultValue = {
+  isImparative: null,
   onNodeClick: () => {}
 };
 const TreeContext = React.createContext(defaultValue);

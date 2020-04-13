@@ -24,7 +24,7 @@ const FolderName = ({ isOpen, name, handleClick }) => (
 
 const Folder = ({ name, children, level, parentPath, id }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { onNodeClick } = useTreeContext();
+  const { onNodeClick, isImparative } = useTreeContext();
   const [childs, setChilds] = useState([]);
 
   // increase `level` recursively
@@ -91,10 +91,12 @@ const Folder = ({ name, children, level, parentPath, id }) => {
             handleClick={() => setIsOpen(!isOpen)}
           />
 
-          <div className="folder__actions">
-            <AiOutlineFileAdd onClick={handleFileCreation} />
-            <AiOutlineFolderAdd onClick={handleFolderCreation} />
-          </div>
+          {isImparative && (
+            <div className="folder__actions">
+              <AiOutlineFileAdd onClick={handleFileCreation} />
+              <AiOutlineFolderAdd onClick={handleFolderCreation} />
+            </div>
+          )}
         </Actions>
         <Collapse className="tree__folder--collapsible" isOpen={isOpen}>
           {childs}

@@ -32,6 +32,7 @@ const Tree = ({ children, data, onNodeClick }) => {
   return (
     <TreeContext.Provider
       value={{
+        isImparative,
         onNodeClick: path => {
           onNodeClick && onNodeClick(path);
         }
