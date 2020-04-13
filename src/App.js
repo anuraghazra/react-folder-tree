@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./styles.css";
-import Tree from "./Tree/Tree";
 import _cloneDeep from "lodash.clonedeep";
+import "./styles.css";
+
+import Tree from "./Tree/Tree";
 import { createFolder, createFile, findNodeById } from "./utils";
 
 export default function App() {
@@ -64,24 +65,14 @@ export default function App() {
 
       <h2>Declarative API</h2>
       <Tree>
-        <Tree.Folder name="src">
-          <Tree.Folder name="lib">
-            <Tree.Folder name="controllers">
-              <Tree.File name="Post.js" />
-            </Tree.Folder>
-            <Tree.Folder name="middlewares">
-              <Tree.File name="auth.js" />
-              <Tree.File name="logger.js" />
-              <Tree.File name="User.js" />
-            </Tree.Folder>
-            <Tree.File name="Vue.js" />
-            <Tree.File name="React.js" />
+        <Tree.Folder name="client">
+          <Tree.Folder name="Components">
+            <Tree.File name="Button.jsx" />
+            <Tree.File name="Button.style.js" />
           </Tree.Folder>
-          <Tree.File name="Card.js" />
-          <Tree.File name="Button.js" />
+          <Tree.File name="setup.js" />
         </Tree.Folder>
         <Tree.File name="index.html" />
-        <Tree.File name="server.js" />
         <Tree.File name="style.css" />
       </Tree>
     </div>
