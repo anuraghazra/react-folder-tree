@@ -26,7 +26,8 @@ export default function App() {
             { type: "file", name: "Tree.style.js" }
           ]
         },
-        { type: "file", name: "setup.js" }
+        { type: "file", name: "setup.js" },
+        { type: "file", name: "setupTests.js" }
       ]
     },
     {
