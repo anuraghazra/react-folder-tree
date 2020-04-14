@@ -7,7 +7,7 @@ import { StyledTree } from "./Tree.style";
 import { Folder } from "./TreeFolder";
 import { File } from "./TreeFile";
 import {
-  findNodeById,
+  searchDFS,
   createFile,
   createFolder,
   useDidMountEffect
@@ -16,8 +16,16 @@ import {
 const reducer = (state, action) => {
   let newState = _cloneDeep(state);
   let node = null;
+  let parent = null;
   if (action.payload && action.payload.id) {
-    node = findNodeById(newState, action.payload.id);
+    let foundNode = searchDFS({
+      data: newState,
+      cond: item => {
+        return item.id === action.payload.id;
+      }
+    });
+    parent = foundNode.parent;
+    node = foundNode.item;
   }
 
   switch (action.type) {
@@ -30,11 +38,11 @@ const reducer = (state, action) => {
       node.name = action.payload.name;
       return newState;
     case "DELETE_FILE":
-      if (!node.parent) {
+      if (!parent) {
         newState = newState.filter(file => file.id !== action.payload.id);
         return newState;
       } else {
-        node.parent.files = node.parent.files.filter(
+        parent.files = parent.files.filter(
           file => file.id !== action.payload.id
         );
       }
@@ -48,10 +56,10 @@ const reducer = (state, action) => {
       console.log(action);
       return newState;
     case "DELETE_FOLDER":
-      if (!node.parent) {
+      if (!parent) {
         newState = newState.filter(item => item.id !== action.payload.id);
       } else {
-        node.parent.files = node.parent.files.filter(
+        parent.files = parent.files.filter(
           item => item.id !== action.payload.id
         );
       }
