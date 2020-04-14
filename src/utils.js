@@ -1,3 +1,5 @@
+import { useRef, useEffect } from "react";
+
 export const findNodeById = (nodes, id) => {
   let final;
 
@@ -16,34 +18,13 @@ export const findNodeById = (nodes, id) => {
   return final;
 };
 
-export const findPrevNodeById = (nodes, id) => {
-  let final;
-  let prev = [];
-  let parent = [];
+export const useDidMountEffect = (func, deps) => {
+  const didMount = useRef(false);
 
-  function findNode(nodes, id) {
-    nodes.forEach(n => {
-      if (n.type === "folder") {
-        prev.push(parent[parent.length - 1]);
-      }
-      if (n.id === id) {
-        final = n;
-        return;
-      }
-      if (n.files) {
-        n.files.forEach(n => {
-          if (n.type === "folder") {
-            parent.push(n);
-          }
-        });
-        findNode(n.files, id);
-      }
-    });
-  }
-
-  findNode(nodes, id);
-
-  return prev[prev.length - 1];
+  useEffect(() => {
+    if (didMount.current) func();
+    else didMount.current = true;
+  }, deps);
 };
 
 export const createFile = ({ name }) => ({ name, type: "file" });
