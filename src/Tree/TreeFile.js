@@ -7,28 +7,34 @@ import { ActionsWrapper, StyledName } from "./Tree.style.js";
 import { PlaceholderInput } from "./TreePlaceholderInput";
 import FILE_ICONS from "./FileIcons";
 
-const File = ({ name, id, parentId }) => {
+const File = ({ name, id, parent }) => {
   const [isEditing, setEditing] = useState(false);
-  const { onNodeClick, isImparative } = useTreeContext();
+  const { state, dispatch, isImparative, onNodeClick } = useTreeContext();
   const ext = useRef("");
 
   let splitted = name && name.split(".");
   ext.current = splitted && splitted[splitted.length - 1];
 
   return (
-    <StyledFile className="tree__file">
+    <StyledFile
+      onClick={event => {
+        event.stopPropagation();
+        onNodeClick({
+          state,
+          name,
+          parent,
+          type: "file"
+        });
+      }}
+      className="tree__file"
+    >
       {isEditing ? (
         <PlaceholderInput
           defaultValue={name}
           type="file"
           style={{ marginLeft: 0 }}
-          handleSubmit={fileName => {
-            onNodeClick({
-              id,
-              type: "file",
-              action: "edit",
-              name: fileName
-            });
+          handleSubmit={name => {
+            dispatch({ type: "EDIT_FILE", payload: { id, name } });
             setEditing(false);
           }}
         />
@@ -47,7 +53,7 @@ const File = ({ name, id, parentId }) => {
               <AiOutlineEdit onClick={() => setEditing(!isEditing)} />
               <AiOutlineDelete
                 onClick={() => {
-                  onNodeClick({ parentId, id, action: "delete", type: "file" });
+                  dispatch({ type: "DELETE_FILE", payload: { id } });
                 }}
               />
             </div>

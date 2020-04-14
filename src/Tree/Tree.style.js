@@ -5,8 +5,13 @@ export const INDENT = 10;
 export const StyledTree = styled.div`
   line-height: 1.75;
   z-index: 1;
+
+  .tree__input {
+    width: auto;
+  }
 `;
 export const StyledFile = styled.div`
+  flex-wrap: nowrap;
   display: flex;
   align-items: center;
   font-weight: normal;
@@ -26,9 +31,14 @@ export const ActionsWrapper = styled.div`
 
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   justify-content: space-between;
 
   .actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     opacity: 0;
     pointer-events: none;
     transition: 0.2s;

@@ -1,6 +1,8 @@
 import React from "react";
 
 const defaultValue = {
+  dispatch: null,
+  state: null,
   isImparative: null,
   onNodeClick: () => {}
 };

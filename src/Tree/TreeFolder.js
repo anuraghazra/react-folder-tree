@@ -4,7 +4,8 @@ import {
   AiOutlineFileAdd,
   AiOutlineFolder,
   AiOutlineFolderOpen,
-  AiOutlineDelete
+  AiOutlineDelete,
+  AiOutlineEdit
 } from "react-icons/ai";
 import {
   ActionsWrapper,
@@ -23,9 +24,10 @@ const FolderName = ({ isOpen, name, handleClick }) => (
   </StyledName>
 );
 
-const Folder = ({ name, children, level, parentPath, id }) => {
+const Folder = ({ id, name, level, children, parentPath }) => {
+  const { state, dispatch, isImparative, onNodeClick } = useTreeContext();
+  const [isEditing, setEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { onNodeClick, isImparative } = useTreeContext();
   const [childs, setChilds] = useState([]);
 
   // increase `level` recursively
@@ -50,14 +52,8 @@ const Folder = ({ name, children, level, parentPath, id }) => {
       ...childs,
       <PlaceholderInput
         type="file"
-        handleSubmit={fileName => {
-          onNodeClick({
-            id,
-            type: "file",
-            name: fileName,
-            action: "create",
-            path: `${parentPath}/${name}`
-          });
+        handleSubmit={name => {
+          dispatch({ type: "CREATE_FILE", payload: { id, name } });
         }}
       />
     ]);
@@ -71,35 +67,60 @@ const Folder = ({ name, children, level, parentPath, id }) => {
       <PlaceholderInput
         type="folder"
         folderLevel={level}
-        handleSubmit={folderName => {
-          onNodeClick({
-            id,
-            type: "folder",
-            action: "create",
-            name: folderName,
-            path: `${parentPath}/${name}`
-          });
+        handleSubmit={name => {
+          dispatch({ type: "CREATE_FOLDER", payload: { id, name } });
         }}
       />
     ]);
   };
 
   const handleDeleteFolder = () => {
-    onNodeClick({ id, action: "delete", type: "folder" });
+    dispatch({ type: "DELETE_FOLDER", payload: { id } });
+  };
+  const handleFolderRename = name => {
+    setIsOpen(true);
+    setEditing(true);
   };
 
   return (
-    <StyledFolder className="tree__folder" indent={level}>
+    <StyledFolder
+      onClick={event => {
+        event.stopPropagation();
+        onNodeClick({
+          state,
+          name,
+          level,
+          path: `${parentPath}/${name}`,
+          type: "folder"
+        });
+      }}
+      className="tree__folder"
+      indent={level}
+    >
       <VerticalLine>
         <ActionsWrapper>
-          <FolderName
-            name={name}
-            isOpen={isOpen}
-            handleClick={() => setIsOpen(!isOpen)}
-          />
+          {isEditing ? (
+            <PlaceholderInput
+              type="folder"
+              style={{ marginLeft: 0 }}
+              folderLevel={level - 2}
+              defaultValue={name}
+              handleSubmit={name => {
+                dispatch({ type: "RENAME_FOLDER", payload: { id, name } });
+                setEditing(false);
+              }}
+            />
+          ) : (
+            <FolderName
+              name={name}
+              isOpen={isOpen}
+              handleClick={() => setIsOpen(!isOpen)}
+            />
+          )}
 
           {isImparative && (
             <div className="actions">
+              <AiOutlineEdit onClick={handleFolderRename} />
               <AiOutlineFileAdd onClick={handleFileCreation} />
               <AiOutlineFolderAdd onClick={handleFolderCreation} />
               <AiOutlineDelete onClick={handleDeleteFolder} />

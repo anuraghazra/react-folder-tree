@@ -40,14 +40,25 @@ const PlaceholderInput = ({
     <StyledFile className="tree__file" style={style}>
       {FILE_ICONS[ext] ? FILE_ICONS[ext] : <AiOutlineFile />}
       &nbsp;&nbsp;
-      <input defaultValue={defaultValue} ref={inputRef} onChange={updateExt} />
+      <input
+        className="tree__input"
+        defaultValue={defaultValue}
+        ref={inputRef}
+        onChange={updateExt}
+      />
     </StyledFile>
   ) : (
     <StyledFolder id={v4()} name={name} indent={folderLevel + 1} style={style}>
       <FolderName
         isOpen={true}
         handleClick={() => {}}
-        name={<input defaultValue={defaultValue} ref={inputRef} />}
+        name={
+          <input
+            ref={inputRef}
+            className="tree__input"
+            defaultValue={defaultValue}
+          />
+        }
       />
     </StyledFolder>
   );
