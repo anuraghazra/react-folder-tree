@@ -1,73 +1,14 @@
 import React, { useReducer, useLayoutEffect } from "react";
+import { ThemeProvider } from 'styled-components';
 import { v4 } from "uuid";
-import _cloneDeep from "lodash.clonedeep";
 
-import { TreeContext } from "./TreeContext";
+import { TreeContext, reducer } from './state';
+
 import { StyledTree } from "./Tree.style";
-import { Folder } from "./TreeFolder";
-import { File } from "./TreeFile";
-import {
-  searchDFS,
-  createFile,
-  createFolder,
-  useDidMountEffect
-} from "../utils";
+import { Folder } from "./Folder/TreeFolder";
+import { File } from "./File/TreeFile";
 
-const reducer = (state, action) => {
-  let newState = _cloneDeep(state);
-  let node = null;
-  let parent = null;
-  if (action.payload && action.payload.id) {
-    let foundNode = searchDFS({
-      data: newState,
-      cond: item => {
-        return item.id === action.payload.id;
-      }
-    });
-    parent = foundNode.parent;
-    node = foundNode.item;
-  }
-
-  switch (action.type) {
-    case "SET_DATA":
-      return action.payload;
-    case "CREATE_FILE":
-      node.files.push(createFile({ name: action.payload.name }));
-      return newState;
-    case "EDIT_FILE":
-      node.name = action.payload.name;
-      return newState;
-    case "DELETE_FILE":
-      if (!parent) {
-        newState = newState.filter(file => file.id !== action.payload.id);
-        return newState;
-      } else {
-        parent.files = parent.files.filter(
-          file => file.id !== action.payload.id
-        );
-      }
-      return newState;
-
-    case "CREATE_FOLDER":
-      node.files.push(createFolder({ name: action.payload.name }));
-      return newState;
-    case "RENAME_FOLDER":
-      node.name = action.payload.name;
-      console.log(action);
-      return newState;
-    case "DELETE_FOLDER":
-      if (!parent) {
-        newState = newState.filter(item => item.id !== action.payload.id);
-      } else {
-        parent.files = parent.files.filter(
-          item => item.id !== action.payload.id
-        );
-      }
-      return newState;
-    default:
-      return state;
-  }
-};
+import { useDidMountEffect } from "../utils";
 
 const Tree = ({ children, data, onNodeClick, onUpdate }) => {
   const [state, dispatch] = useReducer(reducer, data);
@@ -117,18 +58,20 @@ const Tree = ({ children, data, onNodeClick, onUpdate }) => {
   const isImparative = data && !children;
 
   return (
-    <TreeContext.Provider
-      value={{
-        isImparative,
-        state,
-        dispatch,
-        onNodeClick: path => {
-          onNodeClick && onNodeClick(path);
-        }
-      }}
-    >
-      <StyledTree>{isImparative ? makeComponents(state) : children}</StyledTree>
-    </TreeContext.Provider>
+    <ThemeProvider theme={{ indent: 10 }} >
+      <TreeContext.Provider
+        value={{
+          isImparative,
+          state,
+          dispatch,
+          onNodeClick: path => {
+            onNodeClick && onNodeClick(path);
+          }
+        }}
+      >
+        <StyledTree>{isImparative ? makeComponents(state) : children}</StyledTree>
+      </TreeContext.Provider>
+    </ThemeProvider>
   );
 };
 

@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { v4 } from "uuid";
 import { AiOutlineFile } from "react-icons/ai";
 
-import { StyledFile, StyledFolder } from "./Tree.style";
-import { FolderName } from "./TreeFolder";
+import { StyledFile } from "./File/TreeFile.style";
+import { StyledFolder } from "./Folder/TreeFolder.style";
+import { FolderName } from "./Folder/TreeFolder";
 import FILE_ICONS from "./FileIcons";
 
 const PlaceholderInput = ({
@@ -48,20 +49,20 @@ const PlaceholderInput = ({
       />
     </StyledFile>
   ) : (
-    <StyledFolder id={v4()} name={name} indent={folderLevel + 1} style={style}>
-      <FolderName
-        isOpen={true}
-        handleClick={() => {}}
-        name={
-          <input
-            ref={inputRef}
-            className="tree__input"
-            defaultValue={defaultValue}
-          />
-        }
-      />
-    </StyledFolder>
-  );
+      <StyledFolder id={v4()} name={name} indent={folderLevel + 1} style={style}>
+        <FolderName
+          isOpen={true}
+          handleClick={() => { }}
+          name={
+            <input
+              ref={inputRef}
+              className="tree__input"
+              defaultValue={defaultValue}
+            />
+          }
+        />
+      </StyledFolder>
+    );
 };
 
 export { PlaceholderInput };

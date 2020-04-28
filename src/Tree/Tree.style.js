@@ -1,28 +1,11 @@
 import styled from "styled-components";
 
-export const INDENT = 10;
-
 export const StyledTree = styled.div`
   line-height: 1.75;
   z-index: 1;
 
   .tree__input {
     width: auto;
-  }
-`;
-export const StyledFile = styled.div`
-  flex-wrap: nowrap;
-  display: flex;
-  align-items: center;
-  font-weight: normal;
-  margin-left: ${INDENT}px;
-`;
-export const StyledFolder = styled.div`
-  font-weight: bold;
-  margin-left: ${p => p.indent * INDENT}px;
-
-  .tree__file {
-    margin-left: ${INDENT * 2}px;
   }
 `;
 
