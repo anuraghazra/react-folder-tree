@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import "./styles.css";
 
 import Tree from "./Tree/Tree";
@@ -14,20 +14,20 @@ const structure = [
         files: [
           { type: "file", name: "Toggle.js" },
           { type: "file", name: "Button.js" },
-          { type: "file", name: "Button.style.js" }
-        ]
+          { type: "file", name: "Button.style.js" },
+        ],
       },
       {
         type: "folder",
         name: "components",
         files: [
           { type: "file", name: "Tree.js" },
-          { type: "file", name: "Tree.style.js" }
-        ]
+          { type: "file", name: "Tree.style.js" },
+        ],
       },
       { type: "file", name: "setup.js" },
-      { type: "file", name: "setupTests.js" }
-    ]
+      { type: "file", name: "setupTests.js" },
+    ],
   },
   {
     type: "folder",
@@ -35,26 +35,24 @@ const structure = [
     files: [
       {
         type: "file",
-        name: "main.js"
-      }
-    ]
+        name: "main.js",
+      },
+    ],
   },
-  { type: "file", name: "index.js" }
+  { type: "file", name: "index.js" },
 ];
 
 export default function App() {
   let [data, setData] = useState(structure);
 
-  const handleClick = props => {
-    // do extra stuff with this data
-    // {state, id, name, type, path?, parent?, level? }
-    // console.log(props);
+  const handleClick = (node) => {
+    console.log(node);
   };
-  const handleUpdate = state => {
+  const handleUpdate = (state) => {
     localStorage.setItem(
       "tree",
-      JSON.stringify(state, function(key, value) {
-        if (key === "parent" || key === "id") {
+      JSON.stringify(state, function (key, value) {
+        if (key === "parentNode" || key === "id") {
           return null;
         }
         return value;

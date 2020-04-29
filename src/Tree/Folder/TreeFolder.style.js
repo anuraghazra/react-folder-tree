@@ -1,10 +1,9 @@
-import styled from 'styled-components';
+import styled from "styled-components/macro";
 
-export const StyledFolder = styled.div`
+export const StyledFolder = styled.section`
   font-weight: bold;
-  margin-left: ${p => p.indent * p.theme.indent}px;
-
+  padding-left: ${(p) => p.theme.indent}px;
   .tree__file {
-    margin-left: ${p => p.theme.indent * 2}px;
+    padding-left: ${(p) => p.theme.indent}px;
   }
 `;

@@ -1,65 +1,69 @@
 import React, { useRef, useState } from "react";
 import { AiOutlineFile, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
-import { StyledFile } from "./TreeFile.style";
-import { useTreeContext } from "../state/TreeContext";
-import { ActionsWrapper, StyledName } from "../Tree.style.js";
-import { PlaceholderInput } from "../TreePlaceholderInput";
-import FILE_ICONS from "../FileIcons";
+import { StyledFile } from "Tree/File/TreeFile.style";
+import { useTreeContext } from "Tree/state/TreeContext";
+import { ActionsWrapper, StyledName } from "Tree/Tree.style.js";
+import { PlaceholderInput } from "Tree/TreePlaceholderInput";
 
-const File = ({ name, id, parent }) => {
+import { FILE } from "Tree/state/constants";
+import FILE_ICONS from "Tree/FileIcons";
+
+const File = ({ name, id, node }) => {
+  const { dispatch, isImparative, onNodeClick } = useTreeContext();
   const [isEditing, setEditing] = useState(false);
-  const { state, dispatch, isImparative, onNodeClick } = useTreeContext();
   const ext = useRef("");
 
-  let splitted = name && name.split(".");
-  ext.current = splitted && splitted[splitted.length - 1];
+  let splitted = name?.split(".");
+  ext.current = splitted[splitted.length - 1];
+
+  const toggleEditing = () => setEditing(!isEditing);
+  const commitEditing = (name) => {
+    dispatch({ type: FILE.EDIT, payload: { id, name } });
+    setEditing(false);
+  };
+  const commitDelete = () => {
+    dispatch({ type: FILE.DELETE, payload: { id } });
+  };
+  const handleNodeClick = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      onNodeClick({ node });
+    },
+    [node]
+  );
+  const handleCancel = () => {
+    setEditing(false);
+  };
 
   return (
-    <StyledFile
-      onClick={event => {
-        event.stopPropagation();
-        onNodeClick({
-          state,
-          name,
-          parent,
-          type: "file"
-        });
-      }}
-      className="tree__file"
-    >
+    <StyledFile onClick={handleNodeClick} className="tree__file">
       {isEditing ? (
         <PlaceholderInput
-          defaultValue={name}
           type="file"
-          style={{ marginLeft: 0 }}
-          handleSubmit={name => {
-            dispatch({ type: "EDIT_FILE", payload: { id, name } });
-            setEditing(false);
-          }}
+          style={{ paddingLeft: 0 }}
+          defaultValue={name}
+          onSubmit={commitEditing}
+          onCancel={handleCancel}
         />
       ) : (
-          <ActionsWrapper>
-            <StyledName>
-              {FILE_ICONS[ext.current] ? (
-                FILE_ICONS[ext.current]
-              ) : (
-                  <AiOutlineFile />
-                )}
-            &nbsp;&nbsp;{name}
-            </StyledName>
-            {isImparative && (
-              <div className="actions">
-                <AiOutlineEdit onClick={() => setEditing(!isEditing)} />
-                <AiOutlineDelete
-                  onClick={() => {
-                    dispatch({ type: "DELETE_FILE", payload: { id } });
-                  }}
-                />
-              </div>
+        <ActionsWrapper>
+          <StyledName>
+            {FILE_ICONS[ext.current] ? (
+              FILE_ICONS[ext.current]
+            ) : (
+              <AiOutlineFile />
             )}
-          </ActionsWrapper>
-        )}
+            &nbsp;&nbsp;{name}
+          </StyledName>
+          {isImparative && (
+            <div className="actions">
+              <AiOutlineEdit onClick={toggleEditing} />
+              <AiOutlineDelete onClick={commitDelete} />
+            </div>
+          )}
+        </ActionsWrapper>
+      )}
     </StyledFile>
   );
 };

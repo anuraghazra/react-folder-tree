@@ -7,16 +7,18 @@ import {
   AiOutlineDelete,
   AiOutlineEdit,
 } from "react-icons/ai";
+
 import {
   ActionsWrapper,
   Collapse,
   StyledName,
   VerticalLine,
-} from "../Tree.style";
+} from "Tree/Tree.style";
 import { StyledFolder } from "./TreeFolder.style";
 
-import { useTreeContext } from "../state/TreeContext";
-import { PlaceholderInput } from "../TreePlaceholderInput";
+import { FILE, FOLDER } from "Tree/state/constants";
+import { useTreeContext } from "Tree/state/TreeContext";
+import { PlaceholderInput } from "Tree/TreePlaceholderInput";
 
 const FolderName = ({ isOpen, name, handleClick }) => (
   <StyledName onClick={handleClick}>
@@ -25,26 +27,42 @@ const FolderName = ({ isOpen, name, handleClick }) => (
   </StyledName>
 );
 
-const Folder = ({ id, name, level, children, parentPath }) => {
-  const { state, dispatch, isImparative, onNodeClick } = useTreeContext();
+const Folder = ({ id, name, children, node }) => {
+  const { dispatch, isImparative, onNodeClick } = useTreeContext();
   const [isEditing, setEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [childs, setChilds] = useState([]);
 
-  // increase `level` recursively
-  // defaultProps comes in on each cycle
   useEffect(() => {
-    const nestedChilds = React.Children.map(children, (item) => {
-      if (item.type === Folder) {
-        return React.cloneElement(item, {
-          level: level + 1,
-          parentPath: `${parentPath}/${name}`,
-        });
-      }
-      return item;
-    });
-    setChilds(nestedChilds);
+    setChilds([children]);
   }, [children]);
+
+  const commitFolderCreation = (name) => {
+    dispatch({ type: FOLDER.CREATE, payload: { id, name } });
+  };
+  const commitFileCreation = (name) => {
+    dispatch({ type: FILE.CREATE, payload: { id, name } });
+  };
+  const commitDeleteFolder = () => {
+    dispatch({ type: FOLDER.DELETE, payload: { id } });
+  };
+  const commitFolderEdit = (name) => {
+    dispatch({ type: FOLDER.EDIT, payload: { id, name } });
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setChilds([children]);
+  };
+
+  const handleNodeClick = React.useCallback(
+    (event) => {
+      event.stopPropagation();
+      onNodeClick({ node });
+    },
+    [node]
+  );
 
   const handleFileCreation = (event) => {
     event.stopPropagation();
@@ -53,9 +71,8 @@ const Folder = ({ id, name, level, children, parentPath }) => {
       ...childs,
       <PlaceholderInput
         type="file"
-        handleSubmit={(name) => {
-          dispatch({ type: "CREATE_FILE", payload: { id, name } });
-        }}
+        onSubmit={commitFileCreation}
+        onCancel={handleCancel}
       />,
     ]);
   };
@@ -67,49 +84,28 @@ const Folder = ({ id, name, level, children, parentPath }) => {
       ...childs,
       <PlaceholderInput
         type="folder"
-        folderLevel={level}
-        handleSubmit={(name) => {
-          dispatch({ type: "CREATE_FOLDER", payload: { id, name } });
-        }}
+        onSubmit={commitFolderCreation}
+        onCancel={handleCancel}
       />,
     ]);
   };
 
-  const handleDeleteFolder = () => {
-    dispatch({ type: "DELETE_FOLDER", payload: { id } });
-  };
-  const handleFolderRename = (name) => {
+  const handleFolderRename = () => {
     setIsOpen(true);
     setEditing(true);
   };
 
   return (
-    <StyledFolder
-      onClick={(event) => {
-        event.stopPropagation();
-        onNodeClick({
-          state,
-          name,
-          level,
-          path: `${parentPath}/${name}`,
-          type: "folder",
-        });
-      }}
-      className="tree__folder"
-      indent={level}
-    >
+    <StyledFolder id={id} onClick={handleNodeClick} className="tree__folder">
       <VerticalLine>
         <ActionsWrapper>
           {isEditing ? (
             <PlaceholderInput
               type="folder"
-              style={{ marginLeft: 0 }}
-              folderLevel={level - 2}
+              style={{ paddingLeft: 0 }}
               defaultValue={name}
-              handleSubmit={(name) => {
-                dispatch({ type: "RENAME_FOLDER", payload: { id, name } });
-                setEditing(false);
-              }}
+              onCancel={handleCancel}
+              onSubmit={commitFolderEdit}
             />
           ) : (
             <FolderName
@@ -124,7 +120,7 @@ const Folder = ({ id, name, level, children, parentPath }) => {
               <AiOutlineEdit onClick={handleFolderRename} />
               <AiOutlineFileAdd onClick={handleFileCreation} />
               <AiOutlineFolderAdd onClick={handleFolderCreation} />
-              <AiOutlineDelete onClick={handleDeleteFolder} />
+              <AiOutlineDelete onClick={commitDeleteFolder} />
             </div>
           )}
         </ActionsWrapper>
@@ -135,6 +131,5 @@ const Folder = ({ id, name, level, children, parentPath }) => {
     </StyledFolder>
   );
 };
-Folder.defaultProps = { level: 1, parentPath: "" };
 
 export { Folder, FolderName };

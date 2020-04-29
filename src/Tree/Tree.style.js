@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components/macro";
 
 export const StyledTree = styled.div`
   line-height: 1.75;
@@ -54,7 +54,7 @@ export const StyledName = styled.div`
 
 export const Collapse = styled.div`
   height: max-content;
-  max-height: ${p => (p.isOpen ? "300px" : "0px")};
+  max-height: ${p => (p.isOpen ? "800px" : "0px")};
   overflow: hidden;
   transition: 0.3s ease-in-out;
 `;

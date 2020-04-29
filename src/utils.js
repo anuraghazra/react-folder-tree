@@ -5,7 +5,7 @@ export const findNodeById = (nodes, id) => {
   let final;
 
   function findNode(nodes, id) {
-    nodes.forEach(n => {
+    nodes.forEach((n) => {
       if (n.id === id) {
         final = n;
         return;
@@ -26,13 +26,13 @@ export const searchDFS = ({ data, cond, childPathKey = "files" }) => {
   let next = null;
   let prev = null;
 
-  const recursiveFind = tree => {
+  const recursiveFind = (tree) => {
     tree.forEach((item, index) => {
       if (cond(item, index)) {
         final = item;
 
         if (parentPath) {
-          parentPath.forEach(p => {
+          parentPath.forEach((p) => {
             // check if parent has the `current item`
             if (p && p[childPathKey].includes(item)) {
               parent = p;
@@ -62,7 +62,7 @@ export const searchDFS = ({ data, cond, childPathKey = "files" }) => {
     parent,
     item: final,
     nextSibling: next,
-    previousSibling: prev
+    previousSibling: prev,
   };
 };
 

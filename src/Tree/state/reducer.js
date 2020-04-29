@@ -1,9 +1,6 @@
 import _cloneDeep from "lodash.clonedeep";
-import {
-  searchDFS,
-  createFile,
-  createFolder,
-} from "../../utils";
+import { searchDFS, createFile, createFolder } from "utils";
+import { FILE, FOLDER } from "./constants";
 
 const reducer = (state, action) => {
   let newState = _cloneDeep(state);
@@ -12,54 +9,46 @@ const reducer = (state, action) => {
   if (action.payload && action.payload.id) {
     let foundNode = searchDFS({
       data: newState,
-      cond: item => {
+      cond: (item) => {
         return item.id === action.payload.id;
-      }
+      },
     });
-    parent = foundNode.parent;
     node = foundNode.item;
+    parent = node.parentNode;
   }
 
   switch (action.type) {
     case "SET_DATA":
       return action.payload;
-    case "CREATE_FILE":
+
+    case FILE.CREATE:
       node.files.push(createFile({ name: action.payload.name }));
       return newState;
-    case "EDIT_FILE":
+
+    case FOLDER.CREATE:
+      node.files.push(createFolder({ name: action.payload.name }));
+      return newState;
+
+    case FOLDER.EDIT:
+    case FILE.EDIT:
       node.name = action.payload.name;
       return newState;
-    case "DELETE_FILE":
-      if (!parent) {
-        newState = newState.filter(file => file.id !== action.payload.id);
+
+    case FOLDER.DELETE:
+    case FILE.DELETE:
+      if (!parent || Array.isArray(parent)) {
+        newState = newState.filter((file) => file.id !== action.payload.id);
         return newState;
       } else {
         parent.files = parent.files.filter(
-          file => file.id !== action.payload.id
+          (file) => file.id !== action.payload.id
         );
       }
       return newState;
 
-    case "CREATE_FOLDER":
-      node.files.push(createFolder({ name: action.payload.name }));
-      return newState;
-    case "RENAME_FOLDER":
-      node.name = action.payload.name;
-      console.log(action);
-      return newState;
-    case "DELETE_FOLDER":
-      if (!parent) {
-        newState = newState.filter(item => item.id !== action.payload.id);
-      } else {
-        parent.files = parent.files.filter(
-          item => item.id !== action.payload.id
-        );
-      }
-      return newState;
     default:
       return state;
   }
 };
 
-
-export { reducer }
+export { reducer };
