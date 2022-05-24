@@ -14,20 +14,20 @@ const structure = [
         files: [
           { type: "file", name: "Toggle.js" },
           { type: "file", name: "Button.js" },
-          { type: "file", name: "Button.style.js" },
-        ],
+          { type: "file", name: "Button.style.js" }
+        ]
       },
       {
         type: "folder",
         name: "components",
         files: [
           { type: "file", name: "Tree.js" },
-          { type: "file", name: "Tree.style.js" },
-        ],
+          { type: "file", name: "Tree.style.js" }
+        ]
       },
       { type: "file", name: "setup.js" },
-      { type: "file", name: "setupTests.js" },
-    ],
+      { type: "file", name: "setupTests.js" }
+    ]
   },
   {
     type: "folder",
@@ -35,11 +35,11 @@ const structure = [
     files: [
       {
         type: "file",
-        name: "main.js",
-      },
-    ],
+        name: "main.js"
+      }
+    ]
   },
-  { type: "file", name: "index.js" },
+  { type: "file", name: "index.js" }
 ];
 
 export default function App() {
@@ -73,31 +73,9 @@ export default function App() {
 
   return (
     <div className="App">
-      <h2>Imparative API (editable)</h2>
+      <h2>FILE VIEWER</h2>
 
       <Tree data={data} onUpdate={handleUpdate} onNodeClick={handleClick} />
-
-      <h2>Declarative API</h2>
-      <Tree>
-        <Tree.Folder name="client">
-          <Tree.Folder name="Components">
-            <Tree.File name="Button.jsx" />
-            <Tree.File name="Button.style.js" />
-          </Tree.Folder>
-          <Tree.File name="setup.js" />
-          <Tree.Folder name="client">
-            <Tree.Folder name="Components">
-              <Tree.File name="Button.jsx" />
-              <Tree.File name="Button.style.js" />
-            </Tree.Folder>
-            <Tree.File name="setup.js" />
-          </Tree.Folder>
-        </Tree.Folder>
-        <Tree.File name="index.html" />
-        <Tree.File name="style.css" />
-        <Tree.File name="style.css" />
-        <Tree.File name="style.css" />
-      </Tree>
     </div>
   );
 }
