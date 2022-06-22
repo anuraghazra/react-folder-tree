@@ -31,6 +31,10 @@ const reducer = (state, action) => {
 
     case FOLDER.EDIT:
     case FILE.EDIT:
+      let prevPath = node.path;
+      let prevName = node.name
+      let newPath = prevPath.slice(0, prevPath.length-prevName.length) + action.payload.name
+      node.path = newPath
       node.name = action.payload.name;
       return newState;
 
