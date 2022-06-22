@@ -75,5 +75,5 @@ export const useDidMountEffect = (func, deps) => {
   }, deps);
 };
 
-export const createFile = ({ name }) => ({ name, type: "file" });
-export const createFolder = ({ name }) => ({ name, type: "folder", files: [] });
+export const createFile = ({ name, parentPath }) => ({ name, type: "file", path: `${parentPath}/${name}` });
+export const createFolder = ({ name, parentPath }) => ({ name, type: "folder", files: [], path: `${parentPath}/${name}` });
