@@ -2,7 +2,7 @@
 
 Simple yet flexible folder tree component with Imperative and Declarative API with build-in folder editing capabilities.
 
-[Live Demo](https://schsn.csb.app/)
+[Live Demo](https://ck6c8.csb.app/)
 
 ## Imperative API
 
